@@ -1,0 +1,12 @@
+/Applications/XAMPP/xamppfiles/sbin/mysqld, Version: 10.4.28-MariaDB (Source distribution). started with:
+Tcp port: 3307  Unix socket: /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
+Time		    Id Command	Argument
+		   124 Query	SHOW WARNINGS
+		   124 Query	SHOW SESSION VARIABLES LIKE 'FOREIGN_KEY_CHECKS'
+		   123 Query	SELECT `comment` FROM `phpmyadmin`.`pma__column_info` WHERE db_name = 'jcicondf_db' AND table_name  = '' AND column_name = '(db_comment)'
+		   124 Query	SHOW TABLES FROM `jcicondf_db`
+		   124 Query	SELECT 1 FROM (SELECT `GRANTEE`, `IS_GRANTABLE` FROM `INFORMATION_SCHEMA`.`COLUMN_PRIVILEGES` UNION SELECT `GRANTEE`, `IS_GRANTABLE` FROM `INFORMATION_SCHEMA`.`TABLE_PRIVILEGES` UNION SELECT `GRANTEE`, `IS_GRANTABLE` FROM `INFORMATION_SCHEMA`.`SCHEMA_PRIVILEGES` UNION SELECT `GRANTEE`, `IS_GRANTABLE` FROM `INFORMATION_SCHEMA`.`USER_PRIVILEGES`) t WHERE `IS_GRANTABLE` = 'YES' AND '''root''@''localhost''' LIKE `GRANTEE` LIMIT 1
+		   124 Query	SELECT `PRIVILEGE_TYPE` FROM `INFORMATION_SCHEMA`.`USER_PRIVILEGES` WHERE GRANTEE='''root''@''localhost''' AND PRIVILEGE_TYPE='EVENT'
+		   124 Query	SELECT `PRIVILEGE_TYPE` FROM `INFORMATION_SCHEMA`.`USER_PRIVILEGES` WHERE GRANTEE='''root''@''localhost''' AND PRIVILEGE_TYPE='TRIGGER'
+		   123 Quit	
+		   124 Quit	
