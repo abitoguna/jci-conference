@@ -8,15 +8,16 @@ create table User(
 
 create table Delegate (
     id int primary key AUTO_INCREMENT,
-    firstName varchar(255),
-    lastName varchar(255),
+    first_name varchar(255),
+    last_name varchar(255),
     email varchar(50),
-    phoneNumber varchar(14),
+    phone_number varchar(14),
     gender varchar(6),
-    membershipType varchar(255),
-    localOrganisation varchar(250),
-    isRegistered boolean,
-    registrationDate datetime,
+    membership_type varchar(255),
+    local_organisation varchar(250),
+    is_registered boolean,
+    kit_collected boolean,
+    registration_date datetime,
     UNIQUE (email)
 )
 

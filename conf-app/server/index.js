@@ -16,6 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/user', userRoute);
 app.use('/delegate', delegateRoute);
+app.get("/", (req, res) => res.send("Conf api here..."));
 
 
 

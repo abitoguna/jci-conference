@@ -1,0 +1,73 @@
+<section class="top">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container">
+          <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="active" >
+            <img src="assets/images/jcin-logo.png" alt="logo" class="img-fluid" width="80">
+          </a>
+        </div>
+      </nav>
+</section>
+<section class="container">
+    <div class="text-center">
+        <img src="assets/images/southern-conf-logo.jpg" alt="" class="img-fluid mb-3 w-25">
+        <p class="display-5"></p>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <h4 class="m-0 fw-bold">Delegates</h4>
+                  <div class="search">
+                    <!-- <label for="formGroupExampleInput" class="form-label">Example label</label> -->
+                    <input  class="form-control" type="text" placeholder="Search by first name" [(ngModel)]="searchFormControl" (ngModelChange)="searchDelegates()">
+                  </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-responsive table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Title</th>
+                        <th>Email Address</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Local Organisation</th>
+                        <th>Badges</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <div class="loader" *ngIf="isLoading">
+                    <app-loader [diameter]="30" [text]="isLoading ? 'Loading delegate list...' : isLoading && isSearching ? 'Searching...' : ''"></app-loader>
+                </div>
+                    <ng-container *ngIf="!isLoading">
+                        <tr *ngFor="let item of allDelegates">
+                            <td>{{ item.firstName | titlecase }}</td>
+                            <td>{{ item.lastName | titlecase }}</td>
+                            <td>{{ item.membershipType }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>{{ item.gender | titlecase }}</td>
+                            <td>{{ item.phoneNumber }}</td>
+                            <td>{{ item.localOrganisation }}</td>
+                            <td> 
+                                <span class="badge rounded-pill text-bg-success me-2" *ngIf="item.isRegistered">Registered</span>
+                                <span class="badge rounded-pill text-bg-info" *ngIf="item.kitCollected">Kit Collected</span>
+                            </td>
+                            <td>-</td>
+                            </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <mat-paginator [length]="totalCount"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="[10, 25, 50, 100]"
+              aria-label="Select page">
+</mat-paginator>
+        </div>
+    </div>
+</section>
