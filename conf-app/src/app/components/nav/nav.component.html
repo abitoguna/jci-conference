@@ -1,0 +1,13 @@
+<nav class="navbar bg-body-tertiary">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="active">
+        <img
+          src="assets/images/jcin-logo.png"
+          alt="logo"
+          class="img-fluid"
+          width="80"
+        />
+      </a>
+      <p class="h6 mb-0">Logged in as {{ name | titlecase }} <span class="btn btn-sm btn-outline-secondary ms-3" (click)="logOut()">Sign out</span></p>
+    </div>
+  </nav>

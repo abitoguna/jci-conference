@@ -1,0 +1,18 @@
+<mat-dialog-content>
+  <div class="wrapper text-center">
+    <div class="mb-3">
+      <span class="display-3">
+        🤔
+      </span>
+    </div>
+    <p class="h3">{{title}}</p>
+    <p class="h6">{{ subTitle }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <div class="d-flex align-items-center justify-content-center w-100 mb-4">
+        <button class="btn btn-success rounded-pill me-3 px-5" cdkFocusInitial (click)="confirm(true)"> {{ confirmButtonText }}</button>
+        <button class="btn btn-outline-secondary rounded-pill px-5" (click)="confirm(false)">{{cancelButtonText}}</button>
+    </div>
+  </mat-dialog-actions>

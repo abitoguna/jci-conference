@@ -10,11 +10,15 @@ export class ListService {
 
   constructor(private apiService: ApiService) { }
 
-  getAllDelegates(pageSize = 50, pageNumber = 1): Observable<any> {
-    return this.apiService.get<Delegate[]>('delegate/getAll', pageSize, pageNumber);
+  getAllDelegates(pageSize = 50, pageNumber = 1, filter: string): Observable<any> {
+    return this.apiService.get<Delegate[]>('delegate/getAll', {pageSize, pageNumber, filter});
   }
 
-  search(searchParam: string, pageSize = 50, pageNumber = 1): Observable<any> {
-    return this.apiService.get<Delegate[]>('delegate/search', pageSize, pageNumber, searchParam);
+  search(searchParam: string, pageSize = 50, pageNumber = 1, filter: string): Observable<any> {
+    return this.apiService.get<Delegate[]>('delegate/search', {pageSize, pageNumber, searchParam, filter});
+  }
+
+  register(email: string): Observable<any> {
+    return this.apiService.put('delegate/register', {email});
   }
 }

@@ -1,73 +1,293 @@
 <section class="top">
-    <nav class="navbar bg-body-tertiary">
-        <div class="container">
-          <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="active" >
-            <img src="assets/images/jcin-logo.png" alt="logo" class="img-fluid" width="80">
-          </a>
-        </div>
-      </nav>
+ <app-nav />
 </section>
 <section class="container">
-    <div class="text-center">
-        <img src="assets/images/southern-conf-logo.jpg" alt="" class="img-fluid mb-3 w-25">
-        <p class="display-5"></p>
-    </div>
+  <div class="text-center">
+    <img
+      src="assets/images/southern-conf-logo.jpg"
+      alt=""
+      class="img-fluid mb-3 w-25"
+    />
+    <p class="display-5"></p>
+  </div>
 
-    <div class="card shadow">
+  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link rounded-pill"
+        id="pills-home-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#pills-home"
+        type="button"
+        role="tab"
+        aria-controls="pills-home"
+        aria-selected="true"
+        [ngClass]="{'active': currentTab === 'unregistered'}"
+        (click)="setTab('unregistered')"
+      >
+        Unregistered
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link rounded-pill"
+        id="pills-profile-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#pills-profile"
+        type="button"
+        role="tab"
+        aria-controls="pills-profile"
+        aria-selected="false"
+        [ngClass]="{'active': currentTab === 'registered'}"
+        (click)="setTab('registered')"
+      >
+        Registered
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link rounded-pill"
+        id="pills-contact-tab"
+        data-bs-toggle="pill"
+        data-bs-target="#pills-contact"
+        type="button"
+        role="tab"
+        aria-controls="pills-contact"
+        aria-selected="false"
+        [ngClass]="{'active': currentTab === 'all'}"
+        (click)="setTab('all')"
+      >
+        All
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="pills-tabContent">
+    <div
+      class="tab-pane fade show"
+      id="pills-home"
+      role="tabpanel"
+      aria-labelledby="pills-home-tab"
+      tabindex="0"
+      [ngClass]="{'active': currentTab === 'unregistered'}"
+    >
+      <div class="card shadow">
         <div class="card-header">
-            <div class="d-flex align-items-center justify-content-between">
-                <h4 class="m-0 fw-bold">Delegates</h4>
-                  <div class="search">
-                    <!-- <label for="formGroupExampleInput" class="form-label">Example label</label> -->
-                    <input  class="form-control" type="text" placeholder="Search by first name" [(ngModel)]="searchFormControl" (ngModelChange)="searchDelegates()">
-                  </div>
-            </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="m-0 fw-bold">Unregistered Delegates</h4>
+            <span class="d-flex">
+              <div class="search">
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Search by first name"
+                  [(ngModel)]="searchFormControl"
+                  (ngModelChange)="searchDelegates()"
+                />
+              </div>
+              <button
+                class="btn btn-outline-success btn-sm ms-3 rounded-pill"
+                title="Add New Delegate"
+              >
+                <ng-icon name="ionPersonAddOutline" size="1.3em" />
+              </button>
+            </span>
+          </div>
         </div>
-        <div class="card-body">
-            <table class="table table-responsive table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Title</th>
-                        <th>Email Address</th>
-                        <th>Gender</th>
-                        <th>Phone Number</th>
-                        <th>Local Organisation</th>
-                        <th>Badges</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                <div class="loader" *ngIf="isLoading">
-                    <app-loader [diameter]="30" [text]="isLoading ? 'Loading delegate list...' : isLoading && isSearching ? 'Searching...' : ''"></app-loader>
-                </div>
-                    <ng-container *ngIf="!isLoading">
-                        <tr *ngFor="let item of allDelegates">
-                            <td>{{ item.firstName | titlecase }}</td>
-                            <td>{{ item.lastName | titlecase }}</td>
-                            <td>{{ item.membershipType }}</td>
-                            <td>{{ item.email }}</td>
-                            <td>{{ item.gender | titlecase }}</td>
-                            <td>{{ item.phoneNumber }}</td>
-                            <td>{{ item.localOrganisation }}</td>
-                            <td> 
-                                <span class="badge rounded-pill text-bg-success me-2" *ngIf="item.isRegistered">Registered</span>
-                                <span class="badge rounded-pill text-bg-info" *ngIf="item.kitCollected">Kit Collected</span>
-                            </td>
-                            <td>-</td>
-                            </tr>
-                    </ng-container>
-                </tbody>
-            </table>
+        <div class="card-body table-responsive">
+          <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
+          <div class="empty" *ngIf="allDelegates?.length === 0">
+            <ng-template [ngTemplateOutlet]="noData" *ngIf="!isLoading && !isSearching"></ng-template>
+            <ng-template [ngTemplateOutlet]="noResult" *ngIf="!isLoading && isSearching"></ng-template>
+          </div>
         </div>
         <div class="card-footer">
-            <mat-paginator [length]="totalCount"
-              [pageSize]="pageSize"
-              [pageSizeOptions]="[10, 25, 50, 100]"
-              aria-label="Select page">
-</mat-paginator>
+          <mat-paginator
+            [length]="totalCount"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
         </div>
+      </div>
     </div>
+    <div
+      class="tab-pane fade"
+      id="pills-profile"
+      role="tabpanel"
+      aria-labelledby="pills-profile-tab"
+      tabindex="0"
+      [ngClass]="{'active': currentTab === 'registered'}"
+    >
+      <div class="card shadow">
+        <div class="card-header">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="m-0 fw-bold">Registered Delegates</h4>
+            <span class="d-flex">
+              <div class="search">
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Search by first name"
+                  [(ngModel)]="searchFormControl"
+                  (ngModelChange)="searchDelegates()"
+                />
+              </div>
+              <button
+                class="btn btn-outline-success btn-sm ms-3 rounded-pill"
+                title="Add New Delegate"
+              >
+                <ng-icon name="ionPersonAddOutline" size="1.3em" />
+              </button>
+            </span>
+          </div>
+        </div>
+        <div class="card-body table-responsive">
+          <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
+        </div>
+        <div class="card-footer">
+          <mat-paginator
+            [length]="totalCount"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="pills-contact"
+      role="tabpanel"
+      aria-labelledby="pills-contact-tab"
+      tabindex="0"
+      [ngClass]="{'active': currentTab === 'all'}"
+    >
+      <div class="card shadow">
+        <div class="card-header">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="m-0 fw-bold">Unregistered Delegates</h4>
+            <span class="d-flex">
+              <div class="search">
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Search by first name"
+                  [(ngModel)]="searchFormControl"
+                  (ngModelChange)="searchDelegates()"
+                />
+              </div>
+              <button
+                class="btn btn-outline-success btn-sm ms-3 rounded-pill"
+                title="Add New Delegate"
+              >
+                <ng-icon name="ionPersonAddOutline" size="1.3em" />
+              </button>
+            </span>
+          </div>
+        </div>
+        <div class="card-body table-responsive">
+          <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
+        </div>
+        <div class="card-footer">
+          <mat-paginator
+            [length]="totalCount"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<ng-template #delegateTable>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Title</th>
+        <th>Email Address</th>
+        <th>Gender</th>
+        <th>Phone Number</th>
+        <th>Local Organisation</th>
+        <th>Badges</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <div class="loader" *ngIf="isLoading">
+        <app-loader
+          [diameter]="30"
+          [text]="
+            isLoading && !isSearching
+              ? 'Loading delegate list...'
+              : isLoading && isSearching
+              ? 'Searching...'
+              : ''
+          "
+        ></app-loader>
+      </div>
+      <ng-container *ngIf="!isLoading">
+        <tr *ngFor="let item of allDelegates">
+          <td>{{ item.firstName | titlecase }}</td>
+          <td>{{ item.lastName | titlecase }}</td>
+          <td>{{ item.membershipType }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.gender | titlecase }}</td>
+          <td>{{ item.phoneNumber }}</td>
+          <td>{{ item.localOrganisation }}</td>
+          <td>
+            <span
+              class="badge rounded-pill text-bg-success me-2"
+              *ngIf="item.isRegistered"
+              >Registered</span
+            >
+            <!-- <span class="badge rounded-pill text-bg-info" *ngIf="item.kitCollected">Kit Collected</span> -->
+          </td>
+          <td>
+            <button
+              class="btn btn-outline-success btn-sm rounded-pill me-2"
+              aria-label="Register button"
+              data-bs-toggle="tooltip"
+              data-bs-title="Register delegate"
+              *ngIf="!item.isRegistered"
+              (click)="attemptRegisteration(item)"
+            >
+              <ng-icon name="ionCheckmarkDoneSharp" size="1.3em" />
+            </button>
+            <button
+              class="btn btn-outline-secondary btn-sm rounded-pill"
+              aria-label="View button"
+              data-bs-toggle="tooltip"
+              data-bs-title="View delegate"
+            >
+              <ng-icon name="ionEyeSharp" size="1.3em" />
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #noData>
+    <div class="w-100 text-center">
+        <p class="display-1">🫰🏾 💨</p>
+        <p class="fw-bold">
+            Our <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span> delegates results are as empty as Thanos' snap. POOF!!!
+        </p>
+    </div>
+</ng-template>
+<ng-template #noResult>
+    <div class="w-100 text-center">
+        <p class="display-1">🤷🏽</p>
+        <p class="fw-bold">
+            I searched high and low, but couldn't find <span class="fw-bolder">'{{ searchFormControl }}'</span> under list of <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span>delegates available.
+        </p>
+    </div>
+</ng-template>

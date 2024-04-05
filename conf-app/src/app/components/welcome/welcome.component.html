@@ -36,5 +36,9 @@
                 </div>
             </div>
         </div>
+        <div class="text-center mt-5">
+            <button class="btn btn-primary rounded-pill px-5" *ngIf="!isLoggedIn" (click)="sigin()">Sign In</button>
+            <button class="btn btn-outline-danger rounded-pill px-5" (click)="logout()" *ngIf="isLoggedIn">Logout</button>
+        </div>
     </div>
 </div>

@@ -10,16 +10,30 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public get<T>(url: string, pageSize = 50, pageNumber = 1, search?: string): Observable<T> {
+  public get<T>(url: string, queryParam: any): Observable<T> {
     let params = new HttpParams();
-    params = params.append('pageSize', pageSize);
-    params = params.append('pageNumber', pageNumber);
-    if (search) {
-      params = params.append('name', search);
-    }
+    Object.keys(queryParam).forEach((key: string) => {
+      if (key !== 'searchParam') {
+        params = params.append(key, queryParam[key]);
+      } else {
+        params = params.append('name', queryParam[key]);
+      }
+    })
     return this.http.get<any>(`${environment.apiUrl}/${url}`, {
       headers: this.headers,
       params
+    });
+  }
+
+  public put(url: string, data: any): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/${url}`, data, {
+      headers: this.headers
+    });
+  }
+
+  public post(url: string, data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/${url}`, data, {
+      headers: this.headers
     });
   }
 

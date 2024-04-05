@@ -2,6 +2,7 @@ create table User(
     id int primary key AUTO_INCREMENT,
     username varchar(255),
     email varchar(50),
+    team varchar(50),
     password varchar(255),
     UNIQUE (email)
 );
@@ -18,6 +19,7 @@ create table Delegate (
     is_registered boolean,
     kit_collected boolean,
     registration_date datetime,
+    registeredBy varchar(50),
     UNIQUE (email)
 )
 
@@ -31,4 +33,11 @@ insert into User(username, email, password) values('abitoguna', 'abitoguna@gmail
     "membershipType": "JCIN Amb.",
     "gender": "male",
     "localOrganisation": "JCI Oluyole"
+}
+
+{
+    "username": "abitoguna",
+    "email": "abitoguna@gmail.com",
+    "team": "registration",
+    "password": "Admin123"
 }

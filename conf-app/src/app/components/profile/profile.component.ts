@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Delegate } from '../../interface/delegate.interface';
 
 @Component({
   selector: 'app-profile',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+  @Input({required: true}) delegate!: Delegate;
 
 }
