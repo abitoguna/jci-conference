@@ -30,7 +30,8 @@ export class WelcomeComponent {
       .open(SigninComponent, {
         panelClass: ['ui-dialog'],
         minHeight: '300px',
-        minWidth: '600px',
+        maxWidth: '600px',
+        width: '100%'
       })
       .afterClosed()
       .pipe(take(1))
@@ -44,7 +45,8 @@ export class WelcomeComponent {
       .open(SignupComponent, {
         panelClass: ['ui-dialog'],
         minHeight: '300px',
-        minWidth: '600px',
+        maxWidth: '600px',
+        width: '100%'
       });
   }
 }

@@ -201,7 +201,8 @@ export class ListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmationComponent, {
       disableClose: true,
       minHeight: '300px',
-      minWidth: '600px',
+      maxWidth: '600px',
+      width: '100%',
       panelClass: ['ui-dialog'],
       data: {
         title: 'Are you sure ?',
@@ -233,7 +234,8 @@ export class ListComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ProcessingComponent, {
       disableClose: true,
       minHeight: '200px',
-      minWidth: '600px',
+      maxWidth: '600px',
+      width: '100%',
       panelClass: ['ui-dialog'],
       data: {
         subTitle: 'Processing your request...',
@@ -285,7 +287,8 @@ export class ListComponent implements OnInit, OnDestroy {
         title: isEditMode ? `Edit ${delegate?.firstName} ${delegate.lastName}` : 'Register a new delegate'
       },
       height: '100%',
-      width: '500px',
+      maxWidth: '500px',
+      width: '100%',
       panelClass: ['ui-dialog'],
       position: {top: '0px', right: '0px'},
       autoFocus: false
