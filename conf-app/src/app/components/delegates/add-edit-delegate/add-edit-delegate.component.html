@@ -1,0 +1,131 @@
+<form
+  class="form"
+  autocomplete="off"
+  [formGroup]="formGroup"
+  (ngSubmit)="submit()"
+>
+  <mat-dialog-content>
+    <div class="form">
+      <p class="h5 text-center mb-3">{{ title }}</p>
+
+      <div class="form-group mb-3">
+        <label>Title</label>
+        <select
+          class="form-select"
+          aria-label="Default select"
+          formControlName="membershipType"
+          [disabled]="isLoading"
+        >
+          <option value="">None</option>
+          <option value="JCI Sen.">JCI Sen.</option>
+          <option value="JCIN Amb.">JCIN Amb.</option>
+          <option value="JCIN Cllr.">JCIN Cllr.</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label>First Name</label>
+        <input
+          class="form-control"
+          formControlName="firstName"
+          type="text"
+          [disabled]="isLoading"
+          placeholder="Enter first name"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label>Last Name</label>
+        <input
+          class="form-control"
+          formControlName="lastName"
+          type="text"
+          [disabled]="isLoading"
+          placeholder="Enter last name"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="emailFormControlInput">Email Address</label>
+        <input
+          class="form-control"
+          id="emailFormControlInput"
+          formControlName="email"
+          type="email"
+          [disabled]="isLoading"
+          placeholder="Enter email address"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label>Phone Number</label>
+        <input
+          class="form-control"
+          formControlName="phoneNumber"
+          type="tel"
+          [disabled]="isLoading"
+          placeholder="Enter last name"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label>Gender</label>
+        <select
+          class="form-select"
+          aria-label="Default select"
+          formControlName="gender"
+          [disabled]="isLoading"
+        >
+          <option value="">-Select delegate gender-</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label>Local Organisation</label>
+        <input
+          class="form-control"
+          formControlName="localOrganisation"
+          type="text"
+          [disabled]="isLoading"
+          placeholder="Enter local organisation"
+        />
+      </div>
+
+      <div class="row">
+        <div class="form-check col-md-6" *ngIf="!isEditMode">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="isRegistered"
+            [disabled]="isLoading"
+          />
+          <label class="form-check-label"> Confirm Registration </label>
+        </div>
+        <div class="form-check col-md-6" *ngIf="!isEditMode">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="kitCollected"
+            [disabled]="isLoading"
+          />
+          <label class="form-check-label"> Kit Collected </label>
+        </div>
+        <div class="form-check col-md-6">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            formControlName="isLateRegistration"
+            [disabled]="isLoading"
+          />
+          <label class="form-check-label"> Registered Late </label>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      class="btn btn-primary rounded-pill px-5 d-block mx-auto py-2 text-light"
+      type="submit"
+      [disabled]="formGroup.invalid || isLoading"
+    >
+      <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
+      {{ isLoading ? "" : "Submit" }}
+    </button>
+  </mat-dialog-actions>
+</form>

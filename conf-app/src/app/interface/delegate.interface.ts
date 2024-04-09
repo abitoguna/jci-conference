@@ -1,5 +1,7 @@
+import { Meal } from "./meal.interface";
+
 export interface Delegate {
-    id: number;
+    id?: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -10,4 +12,7 @@ export interface Delegate {
     isRegistered: boolean;
     kitCollected: boolean;
     registrationDate: string;
+    isLateRegistration: boolean;
+    registeredBy: string;
+    meals: Meal[]
 }

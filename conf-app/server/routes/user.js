@@ -76,8 +76,9 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', verifyToken, async (req, res) => {
     const { username, email, password, pin, team } = req.body;
+    let client;
     if (parseInt(pin) !== parseFloat(process.env.SIGN_PORT)) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -88,7 +89,7 @@ router.post('/signup', async (req, res) => {
             return res.status(400).json({ messgae: 'Username and/or email has be taken. Please choose a different one.' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        let client = await connection.connect();
+        client = await connection.connect();
 
         await client.query('INSERT INTO users (username, email, password, team) VALUES ($1, $2, $3, $4)', [username, email, hashedPassword, team]);
 

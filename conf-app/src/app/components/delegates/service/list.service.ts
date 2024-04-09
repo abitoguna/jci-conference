@@ -14,11 +14,19 @@ export class ListService {
     return this.apiService.get<Delegate[]>('delegate/getAll', {pageSize, pageNumber, filter});
   }
 
+  create(data: Partial<Delegate>): Observable<any> {
+    return this.apiService.post('delegate/create', data);
+  }
+
+  update(data: Partial<Delegate>): Observable<any> {
+    return this.apiService.put(`delegate/update/${data.id}`, data);
+  }
+
   search(searchParam: string, pageSize = 50, pageNumber = 1, filter: string): Observable<any> {
     return this.apiService.get<Delegate[]>('delegate/search', {pageSize, pageNumber, searchParam, filter});
   }
 
-  register(email: string): Observable<any> {
-    return this.apiService.put('delegate/register', {email});
+  register(data: any): Observable<any> {
+    return this.apiService.put('delegate/register', data);
   }
 }

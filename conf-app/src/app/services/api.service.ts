@@ -25,9 +25,16 @@ export class ApiService {
     });
   }
 
-  public put(url: string, data: any): Observable<any> {
+  public put(url: string, data: any, queryParam?: any): Observable<any> {
+    let params = new HttpParams();
+    if (queryParam) {
+      Object.keys(queryParam).forEach((key: string) => {
+        params = params.append(key, queryParam[key]);
+      })
+    }
     return this.http.put<any>(`${environment.apiUrl}/${url}`, data, {
-      headers: this.headers
+      headers: this.headers,
+      params
     });
   }
 

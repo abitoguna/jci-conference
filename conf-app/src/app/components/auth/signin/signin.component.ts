@@ -15,12 +15,9 @@ import { AuthService } from '../service/auth.service';
   styleUrl: './signin.component.scss'
 })
 export class SigninComponent implements OnDestroy {
-  usernameControl = new FormControl(null, [Validators.required]);
-  passwordControl = new FormControl(null, [Validators.required]);
-
   formGroup = new FormGroup({
-    username: this.usernameControl,
-    password: this.passwordControl
+    username: new FormControl(null, [Validators.required]),
+    password: new FormControl(null, [Validators.required])
   })
   isLoading = false;
   unsubscriber$ = new Subject<void>();

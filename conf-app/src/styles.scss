@@ -12,6 +12,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
             padding: 1.125rem 1.125rem 0 1.125rem;
         }
         .mdc-dialog__content {
+            max-height: unset;
             padding: 1.125rem;
         }
         .mdc-dialog__actions {
@@ -19,3 +20,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         }
     }
 }
+

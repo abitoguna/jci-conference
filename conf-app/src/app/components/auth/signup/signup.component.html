@@ -1,1 +1,90 @@
-<p>signup works!</p>
+<mat-dialog-content>
+  <div class="form">
+    <p class="h5 text-center mb-3">Add new user</p>
+
+    <form
+      class="form"
+      autocomplete="off"
+      [formGroup]="formGroup"
+      (ngSubmit)="addUser()"
+    >
+      <div class="form-group mb-3">
+        <label for="emailFormControlInput">Email Address</label>
+        <input
+          class="form-control"
+          id="emailFormControlInput"
+          formControlName="email"
+          type="email"
+          [disabled]="isLoading"
+          placeholder="Enter your email address"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="emailFormControlInput">Username</label>
+        <input
+          class="form-control"
+          id="emailFormControlInput"
+          formControlName="username"
+          type="text"
+          [disabled]="isLoading"
+          placeholder="Enter your username"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="passwordFormControlInput">Password</label>
+        <input
+          class="form-control"
+          formControlName="password"
+          id="passwordFormControlInput"
+          type="password"
+          [disabled]="isLoading"
+        />
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          formControlName="isAdmin"
+          id="flexCheckDefault"
+          [disabled]="isLoading"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Is an Admin
+        </label>
+      </div>
+
+      <div class="form-group mb-3" *ngIf="!isAdminSelected()">
+        <label>Team</label>
+        <select
+          class="form-select"
+          aria-label="Default select"
+          formControlName="team"
+          [disabled]="isLoading"
+        >
+          <option value="">-Select user team-</option>
+          <option value="registration">Registration</option>
+          <option value="welfare">Welfare</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label for="passwordFormControlInput">Pin</label>
+        <input
+          class="form-control"
+          formControlName="pin"
+          id="passwordFormControlInput"
+          type="password"
+          [disabled]="isLoading"
+        />
+      </div>
+      <button
+        class="btn btn-primary rounded-pill px-5 d-block mx-auto py-2 text-light"
+        type="submit"
+        [disabled]="formGroup.invalid || isLoading"
+      >
+        <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
+        {{ isLoading ? "" : "Add User" }}
+      </button>
+    </form>
+  </div>
+</mat-dialog-content>

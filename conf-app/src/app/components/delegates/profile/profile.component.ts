@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Delegate } from '../../interface/delegate.interface';
+import { Delegate } from '../../../interface/delegate.interface';
 
 @Component({
   selector: 'app-profile',

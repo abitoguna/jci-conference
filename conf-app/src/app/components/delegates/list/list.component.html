@@ -1,5 +1,5 @@
 <section class="top">
- <app-nav />
+  <app-nav />
 </section>
 <section class="container">
   <div class="text-center">
@@ -22,7 +22,7 @@
         role="tab"
         aria-controls="pills-home"
         aria-selected="true"
-        [ngClass]="{'active': currentTab === 'unregistered'}"
+        [ngClass]="{ active: currentTab === 'unregistered' }"
         (click)="setTab('unregistered')"
       >
         Unregistered
@@ -38,7 +38,7 @@
         role="tab"
         aria-controls="pills-profile"
         aria-selected="false"
-        [ngClass]="{'active': currentTab === 'registered'}"
+        [ngClass]="{ active: currentTab === 'registered' }"
         (click)="setTab('registered')"
       >
         Registered
@@ -54,7 +54,7 @@
         role="tab"
         aria-controls="pills-contact"
         aria-selected="false"
-        [ngClass]="{'active': currentTab === 'all'}"
+        [ngClass]="{ active: currentTab === 'all' }"
         (click)="setTab('all')"
       >
         All
@@ -68,7 +68,7 @@
       role="tabpanel"
       aria-labelledby="pills-home-tab"
       tabindex="0"
-      [ngClass]="{'active': currentTab === 'unregistered'}"
+      [ngClass]="{ active: currentTab === 'unregistered' }"
     >
       <div class="card shadow">
         <div class="card-header">
@@ -85,8 +85,10 @@
                 />
               </div>
               <button
+                *ngIf="isAdmin"
                 class="btn btn-outline-success btn-sm ms-3 rounded-pill"
                 title="Add New Delegate"
+                (click)="openDelegateForm()"
               >
                 <ng-icon name="ionPersonAddOutline" size="1.3em" />
               </button>
@@ -96,8 +98,14 @@
         <div class="card-body table-responsive">
           <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
           <div class="empty" *ngIf="allDelegates?.length === 0">
-            <ng-template [ngTemplateOutlet]="noData" *ngIf="!isLoading && !isSearching"></ng-template>
-            <ng-template [ngTemplateOutlet]="noResult" *ngIf="!isLoading && isSearching"></ng-template>
+            <ng-template
+              [ngTemplateOutlet]="noData"
+              *ngIf="!isLoading && !isSearching"
+            ></ng-template>
+            <ng-template
+              [ngTemplateOutlet]="noResult"
+              *ngIf="!isLoading && isSearching"
+            ></ng-template>
           </div>
         </div>
         <div class="card-footer">
@@ -117,7 +125,7 @@
       role="tabpanel"
       aria-labelledby="pills-profile-tab"
       tabindex="0"
-      [ngClass]="{'active': currentTab === 'registered'}"
+      [ngClass]="{ active: currentTab === 'registered' }"
     >
       <div class="card shadow">
         <div class="card-header">
@@ -134,8 +142,10 @@
                 />
               </div>
               <button
+                *ngIf="isAdmin"
                 class="btn btn-outline-success btn-sm ms-3 rounded-pill"
                 title="Add New Delegate"
+                (click)="openDelegateForm()"
               >
                 <ng-icon name="ionPersonAddOutline" size="1.3em" />
               </button>
@@ -144,6 +154,16 @@
         </div>
         <div class="card-body table-responsive">
           <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
+          <div class="empty" *ngIf="allDelegates?.length === 0">
+            <ng-template
+              [ngTemplateOutlet]="noData"
+              *ngIf="!isLoading && !isSearching"
+            ></ng-template>
+            <ng-template
+              [ngTemplateOutlet]="noResult"
+              *ngIf="!isLoading && isSearching"
+            ></ng-template>
+          </div>
         </div>
         <div class="card-footer">
           <mat-paginator
@@ -162,7 +182,7 @@
       role="tabpanel"
       aria-labelledby="pills-contact-tab"
       tabindex="0"
-      [ngClass]="{'active': currentTab === 'all'}"
+      [ngClass]="{ active: currentTab === 'all' }"
     >
       <div class="card shadow">
         <div class="card-header">
@@ -179,8 +199,10 @@
                 />
               </div>
               <button
+                *ngIf="isAdmin"
                 class="btn btn-outline-success btn-sm ms-3 rounded-pill"
                 title="Add New Delegate"
+                (click)="openDelegateForm()"
               >
                 <ng-icon name="ionPersonAddOutline" size="1.3em" />
               </button>
@@ -189,6 +211,16 @@
         </div>
         <div class="card-body table-responsive">
           <ng-template [ngTemplateOutlet]="delegateTable"></ng-template>
+          <div class="empty" *ngIf="allDelegates?.length === 0">
+            <ng-template
+              [ngTemplateOutlet]="noData"
+              *ngIf="!isLoading && !isSearching"
+            ></ng-template>
+            <ng-template
+              [ngTemplateOutlet]="noResult"
+              *ngIf="!isLoading && isSearching"
+            ></ng-template>
+          </div>
         </div>
         <div class="card-footer">
           <mat-paginator
@@ -216,6 +248,7 @@
         <th>Phone Number</th>
         <th>Local Organisation</th>
         <th>Badges</th>
+        <th *ngIf="currentTab !== 'unregistered'">Registered by</th>
         <th></th>
       </tr>
     </thead>
@@ -247,28 +280,63 @@
               *ngIf="item.isRegistered"
               >Registered</span
             >
-            <!-- <span class="badge rounded-pill text-bg-info" *ngIf="item.kitCollected">Kit Collected</span> -->
+            <span
+              class="badge rounded-pill text-bg-info me-2"
+              *ngIf="item.kitCollected"
+              >Kit Collected</span
+            >
+            <span
+              class="badge rounded-pill text-bg-danger"
+              *ngIf="item.isLateRegistration"
+              >Late Registration</span
+            >
+          </td>
+          <td *ngIf="currentTab !== 'unregistered'">
+            {{ item?.registeredBy | titlecase }}
           </td>
           <td>
             <button
               class="btn btn-outline-success btn-sm rounded-pill me-2"
-              aria-label="Register button"
-              data-bs-toggle="tooltip"
-              data-bs-title="Register delegate"
+              title="Register and confirm kit"
               *ngIf="!item.isRegistered"
-              (click)="attemptRegisteration(item)"
+              (click)="fullRegistration(item)"
             >
               <ng-icon name="ionCheckmarkDoneSharp" size="1.3em" />
             </button>
             <button
-              class="btn btn-outline-secondary btn-sm rounded-pill"
-              aria-label="View button"
-              data-bs-toggle="tooltip"
-              data-bs-title="View delegate"
+              class="btn btn-outline-secondary btn-sm rounded-pill me-2"
+              title="Confirm kit collection"
+              *ngIf="item.isRegistered && !item.kitCollected"
+              (click)="confirmKitOnly(item)"
             >
-              <ng-icon name="ionEyeSharp" size="1.3em" />
+              <ng-icon name="ionShirtSharp" size="1.3em" />
+            </button>
+            <button class="btn p-0" [matMenuTriggerFor]="menu">
+              <ng-icon name="ionEllipsisVerticalCircleOutline" size="2em" />
             </button>
           </td>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <span>View</span>
+            </button>
+            <button mat-menu-item (click)="openDelegateForm(item)" *ngIf="isAdmin">
+              <span>Edit</span>
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="item.kitCollected"
+              (click)="registerOnly(item)"
+            >
+              <span>Cancel Kit</span>
+            </button>
+            <button
+              mat-menu-item
+              *ngIf="item.isRegistered"
+              (click)="cancelRegistration(item)"
+            >
+              <span>Cancel Registration</span>
+            </button>
+          </mat-menu>
         </tr>
       </ng-container>
     </tbody>
@@ -276,18 +344,22 @@
 </ng-template>
 
 <ng-template #noData>
-    <div class="w-100 text-center">
-        <p class="display-1">🫰🏾 💨</p>
-        <p class="fw-bold">
-            Our <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span> delegates results are as empty as Thanos' snap. POOF!!!
-        </p>
-    </div>
+  <div class="w-100 text-center">
+    <p class="display-1">🫰🏾 💨</p>
+    <p class="fw-bold">
+      Our <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span> delegates
+      results are as empty as Thanos' snap. POOF!!!
+    </p>
+  </div>
 </ng-template>
 <ng-template #noResult>
-    <div class="w-100 text-center">
-        <p class="display-1">🤷🏽</p>
-        <p class="fw-bold">
-            I searched high and low, but couldn't find <span class="fw-bolder">'{{ searchFormControl }}'</span> under list of <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span>delegates available.
-        </p>
-    </div>
+  <div class="w-100 text-center">
+    <p class="display-1">🤷🏽</p>
+    <p class="fw-bold">
+      I searched high and low, but couldn't find
+      <span class="fw-bolder">'{{ searchFormControl }}'</span> under list of
+      <span *ngIf="currentTab !== 'all'">{{ currentTab }} </span>delegates
+      available.
+    </p>
+  </div>
 </ng-template>

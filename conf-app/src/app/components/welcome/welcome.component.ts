@@ -5,6 +5,7 @@ import { AuthService } from '../auth/service/auth.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SigninComponent } from '../auth/signin/signin.component';
 import { take } from 'rxjs';
+import { SignupComponent } from '../auth/signup/signup.component';
 
 @Component({
   selector: 'app-welcome',
@@ -15,9 +16,8 @@ import { take } from 'rxjs';
 })
 export class WelcomeComponent {
   isLoggedIn = this.authService.isLoggedIn();
+  isAdmin = localStorage.getItem('team') === 'admin';
   constructor(private authService: AuthService, private dialog: MatDialog) {
-    console.log(this.isLoggedIn);
-    
   }
 
   logout(): void {
@@ -36,6 +36,15 @@ export class WelcomeComponent {
       .pipe(take(1))
       .subscribe(() => {
         this.isLoggedIn = this.authService.isLoggedIn();
+      });
+  }
+
+  addUser(): void {
+    this.dialog
+      .open(SignupComponent, {
+        panelClass: ['ui-dialog'],
+        minHeight: '300px',
+        minWidth: '600px',
       });
   }
 }

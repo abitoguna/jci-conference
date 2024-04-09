@@ -32,10 +32,18 @@ router.post("/create", user.verifyToken, async (req, res) => {
             membershipType,
             gender,
             localOrganisation,
+            isregistered,
+            kitCollected,
+            isLateRegistration
         } = req.body;
+        const loggedInUser = req.user;
+
+        if (loggedInUser.team !== 'admin') {
+            return res.status(500).send({ message: 'You are not authorized to perform this. How did you get here ?' });
+        }
 
         if (!firstName || !email || !lastName) {
-            return res.status(400).send("Missing required fields: name and email");
+            return res.status(400).send({ message: "Missing required fields: name and email" });
         }
 
         client = await connection.connect();
@@ -46,11 +54,11 @@ router.post("/create", user.verifyToken, async (req, res) => {
             [email]
         );
         if (result.rows.length > 0) {
-            return res.status(400).send("Email already exists");
+            return res.status(400).send({ message: "Email already exists" });
         }
 
         await client.query(
-            "INSERT INTO delegates (firstName, lastName, email, phoneNumber, gender, membershipType, localOrganisation) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+            "INSERT INTO delegates (firstName, lastName, email, phoneNumber, gender, membershipType, localOrganisation, isRegistered, kitCollected, isLateRegistration, registeredBy, registrationDate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
             [
                 firstName,
                 lastName,
@@ -59,9 +67,20 @@ router.post("/create", user.verifyToken, async (req, res) => {
                 gender,
                 membershipType,
                 localOrganisation,
+                isregistered ?? false,
+                kitCollected ?? false,
+                isLateRegistration,
+                isregistered ? loggedInUser.username : null,
+                isregistered ? moment() : null
             ]
         );
-
+        if (isregistered) {
+            sendEmailNotification(
+                firstname,
+                lastname,
+                email
+            );
+        }
         res.status(201).send({ message: "Delegate added successfully" });
     } catch (err) {
         res.status(500).send({ message: "Delegate could not be added." });
@@ -82,7 +101,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
 
         if (filterBy === "all") {
             const [delegateResult, totalResult] = await Promise.all([
-                client.query(`SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected
+                client.query(`SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration
                 FROM delegates 
                 ORDER BY firstname ASC
                 LIMIT ${pageSize}
@@ -112,7 +131,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
                 });
         } else {
             const isRegistered = filterBy === 'registered' ? true : false;
-            const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected,
+            const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration,
             COUNT(*) OVER (PARTITION BY 1) AS total_count
             FROM delegates
             WHERE isregistered = $1
@@ -147,6 +166,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
                 });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).send({ message: "Error fetching delegates" });
     } finally {
         await client.release();
@@ -213,6 +233,9 @@ router.put("/register", user.verifyToken, async (req, res) => {
     let client;
     try {
         const delegateEmail = req.body.email;
+        const loggedInUser = req.user;
+        const isKitCollected = req.body.isKitCollected ?? true;
+        const cancelRegistration = req.body.cancelRegistration ?? false;
         if (!delegateEmail) {
             return res
                 .status(400)
@@ -227,33 +250,102 @@ router.put("/register", user.verifyToken, async (req, res) => {
             return res.status(400).send("Delegate not found");
         }
         const delegate = result.rows[0];
-        if (delegate.isregistered) {
-            return res
-                .status(400)
-                .send({ message: "Delegate has already been registered." });
-        }
-        const registrationDate = moment();
 
-        const registerResult = await client.query(
-            "UPDATE delegates SET isregistered = $1, kitcollected = $2, registrationdate = $3 WHERE email = $4",
-            [true, true, registrationDate, delegateEmail]
-        );
-
-        if (registerResult.rowCount > 0) {
-            sendEmailNotification(
-                delegate.firstname,
-                delegate.lastname,
-                delegate.email
-            );
-            res.json({ message: "Delegate registered." });
+        if (cancelRegistration) {
+            await client.query("UPDATE delegates SET isregistered = $1, kitcollected = $2, registrationdate = $3, registeredby = $5 WHERE email = $4", [false, false, null, delegateEmail, null]);
+            return res.status(200).json({ message: 'Registration canceled for delegate.' })
         } else {
-            res.status(404).send("Delegate not found.");
+
+            const registrationDate = moment();
+            const registerResult = await client.query(
+                "UPDATE delegates SET isregistered = $1, kitcollected = $2, registrationdate = $3, registeredby = $5 WHERE email = $4",
+                [true, isKitCollected, registrationDate, delegateEmail, loggedInUser.username]
+            );
+
+            if (registerResult.rowCount > 0) {
+                if (!delegate.isregistered) {
+                    sendEmailNotification(
+                        delegate.firstname,
+                        delegate.lastname,
+                        delegate.email
+                    );
+                    res.json({ message: "Delegate registered." });
+                } else {
+                    res.json({ message: 'Delegate updated.' })
+                }
+            } else {
+                res.status(404).send("Something went wrong, please try again.");
+            }
         }
+
+
     } catch (err) {
         return res.status(500).send({ message: "Could not register delegate." });
     } finally {
         await client.release();
     }
 });
+
+router.put('/update/:id', user.verifyToken, async (req, res) => {
+    let client;
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            membershipType,
+            gender,
+            localOrganisation,
+            isLateRegistration
+        } = req.body;
+        const delegateId = req.params.id ?? null;
+        if (!delegateId) {
+            return res.status(500).json({ message: 'No delegate found.' })
+        }
+        client = await connection.connect();
+        const updateResult = await client.query("UPDATE delegates SET firstname = $2, lastname = $3, email = $4, phonenumber = $5, membershiptype = $6, gender = $7, localorganisation = $8, islateregistration = $9 WHERE id = $1", [delegateId, firstName, lastName, email, phoneNumber, membershipType, gender, localOrganisation, isLateRegistration]);
+        if (updateResult.rowCount > 0) {
+            res.json({ message: "Delegate updated." })
+        }
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong. Could not update delegate. Please try again." });
+    } finally {
+        await client.release();
+    }
+});
+
+router.get('/getNameTag/:id', async (req, res) => {
+    let client;
+    try {
+        const delegateId = req.params.id ?? null;
+        if (!delegateId) {
+            return res.status(500).json({ message: 'No delegate found.' })
+        }
+
+        client = await connection.connect();
+        const delegateResult = await client.query('SELECT id AS id, firstname AS first_name, lastname AS last_name, membershiptype AS membership_type, localorganisation AS local_organisation FROM delegates WHERE id = $1', [delegateId]);
+        const rows = delegateResult.rows;
+        const camelCaseRows = rows.map((row) => {
+            const camelCaseRow = {};
+            for (const key in row) {
+                const camelKey = key.replace(/(_\w)/g, (match) =>
+                    match[1].toUpperCase()
+                );
+                camelCaseRow[camelKey] = row[key];
+            }
+            return camelCaseRow;
+        });
+
+        res.status(200).json({
+            message: 'Successsful',
+            data: camelCaseRows[0]
+        })
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong. Please try again." });
+    } finally {
+        await client.release();
+    }
+})
 
 module.exports = router;
