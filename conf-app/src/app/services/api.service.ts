@@ -10,15 +10,17 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public get<T>(url: string, queryParam: any): Observable<T> {
+  public get<T>(url: string, queryParam?: any): Observable<T> {
     let params = new HttpParams();
-    Object.keys(queryParam).forEach((key: string) => {
-      if (key !== 'searchParam') {
-        params = params.append(key, queryParam[key]);
-      } else {
-        params = params.append('name', queryParam[key]);
-      }
-    })
+    if (queryParam) {
+      Object.keys(queryParam).forEach((key: string) => {
+        if (key !== 'searchParam') {
+          params = params.append(key, queryParam[key]);
+        } else {
+          params = params.append('name', queryParam[key]);
+        }
+      })
+    }
     return this.http.get<any>(`${environment.apiUrl}/${url}`, {
       headers: this.headers,
       params

@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="wrapper">
+    <div class="card shadow border border-dark-subtle">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="jci-logo">
+            <img
+              src="assets/images/jcin-logo.png"
+              alt=""
+              class="img-responsive img-fluid"
+            />
+          </div>
+          <div class="conf-logo">
+            <img
+              src="assets/images/southern-conf-logo.jpg"
+              alt=""
+              class="img-responsive img-fluid"
+            />
+          </div>
+          <div class="see-logo">
+            <img
+              src="assets/images/see-logo.png"
+              alt=""
+              class="img-responsive img-fluid"
+            />
+          </div>
+        </div>
+        <p class="h3 mt-4 mb-2 text-center">DELEGATE E-TAG</p>
+        <div class="button-area d-flex flex-column mt-4 mb-2">
+          <button class="btn btn-info rounded-pill mb-3" [disabled]="isLoading">View Brochure</button>
+          <button class="btn btn-info rounded-pill mb-3" [disabled]="isLoading">View Program</button>
+        </div>
+        <div class="details-area text-center py-3">
+          <p class="h6">Name</p>
+          <p class="h5 p-1 border border-dark rounded">
+            <app-loader *ngIf="isLoading"
+                [diameter]="20"
+                text="Loading name..."
+                ></app-loader>
+            <span>{{ title }} </span>{{ name }}
+          </p>
+          <br />
+          <p class="h6">Local Organisation</p>
+          <p class="h5 mb-3 p-1 border border-dark rounded">
+            <span *ngIf="!isLoading">{{ localOrganisation }}</span>
+            <app-loader *ngIf="isLoading"
+            [diameter]="20"
+            text="Loading local organisation..."
+            ></app-loader></p>
+        </div>
+        <div class="info-area bg-info p-2 rounded fw-bolder">
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center bg-white p-1 rounded">
+              <ng-icon name="ionCalendar" size="1.3rem" class="text-info" />
+              <p class="ms-1 my-0 fw-bold">18th - 21st April, 2024</p>
+            </div>
+            <div class="ms-2 host bg-white rounded d-flex">
+              <div class="title p-1">Host:</div>
+              <p class="my-0 p-1">JCI Uyo City</p>
+            </div>
+          </div>
+          <div class="rounded fw-bold theme mx-auto bg-white mt-1">
+            <div class="d-flex">
+              <div class="title p-1">Theme:</div>
+              <p class="m-0 p-1">Sustainable growth in challenging times: A Nigerian Perspective</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

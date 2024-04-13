@@ -29,4 +29,8 @@ export class ListService {
   register(data: any): Observable<any> {
     return this.apiService.put('delegate/register', data);
   }
+
+  getUserNameTag(id: string): Observable<any> {
+    return this.apiService.get<any>(`delegate/getNameTag/${id}`);
+  }
 }

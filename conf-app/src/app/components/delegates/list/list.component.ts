@@ -176,6 +176,10 @@ export class ListComponent implements OnInit, OnDestroy {
       this.openSnackBar('Delegate has been previously registered.');
       return;
     }
+    if (delegate.isLateRegistration) {
+      this.registerOnly(delegate);
+      return;
+    }
     const name = `${delegate.firstName} ${delegate.lastName}`;
     const message = `This will register ${name} and confirm ${
       delegate.gender === 'male' ? 'his' : 'her'

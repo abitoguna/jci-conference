@@ -1,0 +1,70 @@
+:host {
+  .wrapper {
+    max-width: 420px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .jci-logo {
+      width: 70px;
+    }
+    .conf-logo {
+      width: 180px;
+    }
+    .see-logo {
+      width: 70px;
+    }
+
+    .info-area {
+      font-size: 10px;
+
+      .host {
+        .title {
+          background: rgb(235, 161, 16);
+          background: -moz-linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          background: -webkit-linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          background: linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#eba110",endColorstr="#ffd700",GradientType=1);
+          color: #000;
+          clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+        }
+      }
+      .theme {
+        .title {
+          background: rgb(235, 161, 16);
+          background: -moz-linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          background: -webkit-linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          background: linear-gradient(
+            90deg,
+            rgba(235, 161, 16, 1) 0%,
+            rgba(255, 215, 0, 1) 100%
+          );
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#eba110",endColorstr="#ffd700",GradientType=1);
+          color: #000;
+        }
+      }
+    }
+  }
+}
