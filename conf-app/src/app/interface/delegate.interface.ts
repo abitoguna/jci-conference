@@ -13,6 +13,7 @@ export interface Delegate {
     kitCollected: boolean;
     registrationDate: string;
     isLateRegistration: boolean;
+    isOnlineRegistration: boolean;
     registeredBy: string;
     meals: Meal[]
 }

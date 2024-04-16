@@ -8,8 +8,7 @@ apiKey.apiKey = process.env.BREVO_KEY;
 
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-function sendEmailNotification(firstName, lastName, email) {
-
+function sendEmailNotification(firstName, lastName, email, qrCode, tagLink) {
     sendSmtpEmail = {
         to: [{
             email,
@@ -18,11 +17,12 @@ function sendEmailNotification(firstName, lastName, email) {
         templateId: 1,
         params: {
             firstName,
-            email
+            email,
+            tagLink
         },
-        headers: {
-            'X-Mailin-custom': 'custom_header_1:custom_value_1|custom_header_2:custom_value_2'
-        }
+        attachment: [
+            qrCode
+        ]
     };
 
     apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data) {

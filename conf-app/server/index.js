@@ -4,6 +4,7 @@ const swaggerSpec = require('./swagger');
 var cors = require('cors');
 const userRoute = require('./routes/user');
 const delegateRoute = require('./routes/delegate');
+const mealRoute = require('./routes/meal');
 const app =  express();
 
 // Serve swagger documentation
@@ -15,6 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/user', userRoute.router);
 app.use('/delegate', delegateRoute);
+app.use('meal', mealRoute);
 app.get("/", (req, res) => res.send("Conf api here..."));
 
 

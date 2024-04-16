@@ -21,6 +21,7 @@ create table Delegate (
     registration_date datetime,
     registeredBy varchar(50),
     isLateRegistration boolean
+    isOnlineRegistration boolean
     UNIQUE (email)
 );
 

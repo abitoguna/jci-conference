@@ -4,6 +4,7 @@ const moment = require("moment");
 const router = express.Router();
 const sendEmailNotification = require("../email.service");
 const user = require('../routes/user');
+const QRCode = require('qrcode');
 
 /* @swagger
  * /api/resource:
@@ -34,7 +35,8 @@ router.post("/create", user.verifyToken, async (req, res) => {
             localOrganisation,
             isregistered,
             kitCollected,
-            isLateRegistration
+            isLateRegistration,
+            isOnlineRegistration
         } = req.body;
         const loggedInUser = req.user;
 
@@ -58,7 +60,7 @@ router.post("/create", user.verifyToken, async (req, res) => {
         }
 
         await client.query(
-            "INSERT INTO delegates (firstName, lastName, email, phoneNumber, gender, membershipType, localOrganisation, isRegistered, kitCollected, isLateRegistration, registeredBy, registrationDate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+            "INSERT INTO delegates (firstName, lastName, email, phoneNumber, gender, membershipType, localOrganisation, isRegistered, kitCollected, isLateRegistration, isOnlineRegistration, registeredBy, registrationDate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)",
             [
                 firstName,
                 lastName,
@@ -70,6 +72,7 @@ router.post("/create", user.verifyToken, async (req, res) => {
                 isregistered ?? false,
                 kitCollected ?? false,
                 isLateRegistration,
+                isOnlineRegistration,
                 isregistered ? loggedInUser.username : null,
                 isregistered ? moment() : null
             ]
@@ -101,7 +104,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
 
         if (filterBy === "all") {
             const [delegateResult, totalResult] = await Promise.all([
-                client.query(`SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration
+                client.query(`SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration, isonlineregistration AS is_online_registration,
                 FROM delegates 
                 ORDER BY firstname ASC
                 LIMIT ${pageSize}
@@ -131,7 +134,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
                 });
         } else {
             const isRegistered = filterBy === 'registered' ? true : false;
-            const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration,
+            const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration, isonlineregistration AS is_online_registration,
             COUNT(*) OVER (PARTITION BY 1) AS total_count
             FROM delegates
             WHERE isregistered = $1
@@ -187,7 +190,7 @@ router.get("/search", user.verifyToken, async (req, res) => {
 
         client = await connection.connect();
 
-        const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected,
+        const query = `SELECT id AS id, firstname AS first_name, lastname AS last_name, gender AS gender, email AS email, membershiptype AS membership_type, localorganisation AS local_organisation, isregistered AS is_registered, phonenumber AS phone_number, registrationdate AS registration_date, kitcollected AS kit_collected, registeredby AS registered_by, islateregistration AS is_late_registration, isonlineregistration AS is_online_registration
             COUNT(*) OVER (PARTITION BY 1) AS total_count
             FROM delegates
             WHERE firstname ILIKE $1
@@ -263,11 +266,20 @@ router.put("/register", user.verifyToken, async (req, res) => {
             );
 
             if (registerResult.rowCount > 0) {
+                const qrCodeText = `https://jciconf.netlify.app/#/scantag/${delegate.id}`;
+                const qrCodeData = await generateQRCode(qrCodeText);
+                const qrCode = {
+                      name: `${delegate.firstname}-${delegate.lastname}-etag.png`,
+                      content: qrCodeData.replace(/^data:image\/\w+;base64,/, '')
+                    };
+                  
                 if (!delegate.isregistered) {
                     sendEmailNotification(
                         delegate.firstname,
                         delegate.lastname,
-                        delegate.email
+                        delegate.email,
+                        qrCode,
+                        qrCodeText
                     );
                     res.json({ message: "Delegate registered." });
                 } else {
@@ -346,6 +358,16 @@ router.get('/getNameTag/:id', async (req, res) => {
     } finally {
         await client.release();
     }
-})
+});
+
+async function generateQRCode(text) {
+    try {
+      const qrData = await QRCode.toDataURL(text, { errorCorrectionLevel: 'H' });
+      return qrData;
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      throw error;
+    }
+  }
 
 module.exports = router;
