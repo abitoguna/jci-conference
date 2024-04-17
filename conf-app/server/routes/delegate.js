@@ -313,12 +313,12 @@ router.put('/update/:id', user.verifyToken, async (req, res) => {
         } = req.body;
         const delegateId = req.params.id ?? null;
         if (!delegateId) {
-            return res.status(500).json({ message: 'No delegate found.' })
+            return res.status(500).json({ message: 'No delegate found.' });
         }
         client = await connection.connect();
         const updateResult = await client.query("UPDATE delegates SET firstname = $2, lastname = $3, email = $4, phonenumber = $5, membershiptype = $6, gender = $7, localorganisation = $8, islateregistration = $9 WHERE id = $1", [delegateId, firstName, lastName, email, phoneNumber, membershipType, gender, localOrganisation, isLateRegistration]);
         if (updateResult.rowCount > 0) {
-            res.json({ message: "Delegate updated." })
+            res.json({ message: "Delegate updated." });
         }
     } catch (err) {
         return res.status(500).send({ message: "Something went wrong. Could not update delegate. Please try again." });

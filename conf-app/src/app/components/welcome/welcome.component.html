@@ -37,9 +37,10 @@
             </div>
         </div>
         <div class="text-center mt-5">
-            <button class="btn btn-primary rounded-pill px-5" *ngIf="!isLoggedIn" (click)="sigin()">Sign In</button>
-            <button class="btn btn-primary rounded-pill px-5 me-3" *ngIf="isLoggedIn && isAdmin" (click)="addUser()">Add User</button>
-            <button class="btn btn-outline-danger rounded-pill px-5" (click)="logout()" *ngIf="isLoggedIn">Logout</button>
+            <button class="btn btn-primary rounded-pill btn-sm px-5" *ngIf="!isLoggedIn" (click)="sigin()">Sign In</button>
+            <button class="btn btn-primary rounded-pill btn-sm px-5 me-3" *ngIf="isLoggedIn && isAdmin" (click)="addUser()">Add User</button>
+            <a [routerLink]="['/config']"  class="btn btn-warning btn-sm rounded-pill me-3 px-5" *ngIf="isLoggedIn && isAdmin" (click)="openConfig()">Config</a>
+            <button class="btn btn-outline-danger rounded-pill btn-sm px-5" (click)="logout()" *ngIf="isLoggedIn">Logout</button>
         </div>
     </div>
 </div>

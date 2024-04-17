@@ -35,6 +35,13 @@ CREATE TABLE meals (
   FOREIGN KEY (delegate_id) REFERENCES delegates(id)
 );
 
+CREATE TABLE config (
+    id SERIAL PRIMARY KEY,
+    is_serving_meal BOOLEAN,
+    meal_type varchar(255),
+    banquet_mode BOOLEAN
+)
+
 insert into User(username, email, password) values('abitoguna', 'abitoguna@gmail.com', 'admin');
 
 {

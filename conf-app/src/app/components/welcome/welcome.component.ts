@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SigninComponent } from '../auth/signin/signin.component';
 import { take } from 'rxjs';
 import { SignupComponent } from '../auth/signup/signup.component';
+import { ConfigComponent } from '../config/config.component';
 
 @Component({
   selector: 'app-welcome',
@@ -43,6 +44,16 @@ export class WelcomeComponent {
   addUser(): void {
     this.dialog
       .open(SignupComponent, {
+        panelClass: ['ui-dialog'],
+        minHeight: '300px',
+        maxWidth: '600px',
+        width: '100%'
+      });
+  }
+
+  openConfig(): void {
+    this.dialog
+      .open(ConfigComponent, {
         panelClass: ['ui-dialog'],
         minHeight: '300px',
         maxWidth: '600px',

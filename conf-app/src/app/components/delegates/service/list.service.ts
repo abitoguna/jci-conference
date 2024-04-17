@@ -33,4 +33,9 @@ export class ListService {
   getUserNameTag(id: string): Observable<any> {
     return this.apiService.get<any>(`delegate/getNameTag/${id}`);
   }
+
+  getConfig(): Observable<any> {
+    return this.apiService.get<any>('config/get');
+  }
+  
 }
