@@ -56,7 +56,7 @@ export class NametagComponent implements OnDestroy {
             map((res: any) => res.data)
           )
           .subscribe((delegate: Delegate) => {
-            this.title = delegate.membershipType;
+            this.title = delegate.membershipType ?? null;
             this.name = `${delegate.firstName} ${delegate.lastName}`;
             this.localOrganisation = delegate.localOrganisation;
             this.isLoading = false;

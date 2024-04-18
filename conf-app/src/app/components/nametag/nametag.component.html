@@ -29,9 +29,9 @@
         <div class="button-area d-flex flex-column mt-4 mb-2">
           <div class="delegate" *ngIf="!isLoggedIn">
             <a class="btn btn-info rounded-pill mb-3" href="https://bit.ly/IsongEwongoBrochure" target="_blank">View Brochure</a>
-            <a class="btn btn-info rounded-pill mb-3" href="htttps://bit.ly/IsongEwongoProgram" target="_blank">View Program</a>
+            <a class="btn btn-info rounded-pill mb-3 ms-3" href="https://bit.ly/IsongEwongoProgram" target="_blank">View Program</a>
           </div>
-          <div class="actions" *ngIf="isLoggedIn">
+          <div class="actions" *ngIf="isLoggedIn && config.isServingMeal">
             <div class="data" *ngIf="!isGettingMeal">
               <p class="h6 d-flex align-items-center justify-content-center" *ngIf="isMealServed"><span class="display-4">🍛</span> {{ config.mealType | titlecase }} is served.</p>
             <button *ngIf="!isMealServed" class="btn btn-success rounded-pill mb-3 w-100" (click)="markMealDone()">Mark {{ config.mealType | titlecase }} collected</button>

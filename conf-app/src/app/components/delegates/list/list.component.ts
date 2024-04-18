@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { debounceTime, Observable, Subject, take, takeUntil } from 'rxjs';
 import { ListService } from '../service/list.service';
 import { Delegate } from '../../../interface/delegate.interface';
@@ -67,6 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
   isSearching = false;
   currentTab: 'unregistered' | 'registered' | 'all' = 'unregistered';
   isAdmin = localStorage.getItem('team') === 'admin';
+  @ViewChild('paginator') paginator!: MatPaginator;
   constructor(
     private delegateService: ListService,
     private _snackBar: MatSnackBar,
@@ -80,6 +81,7 @@ export class ListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (value: string | null) => {
           this.pageNumber = 1;
+          this.paginator.pageIndex = 0;
           this.getDelegates(
             this.pageNumber,
             this.pageSize,
@@ -98,6 +100,7 @@ export class ListComponent implements OnInit, OnDestroy {
     isBackground = false
   ): void {
     this.isLoading = !isBackground;
+    if (!isBackground) this.allDelegates = [];
     this.delegateListService$(pageNumber, pageSize, search, tab)
       .pipe(takeUntil(this.unsubscriber$))
       .subscribe({
@@ -273,6 +276,7 @@ export class ListComponent implements OnInit, OnDestroy {
     if (this.currentTab === tab) return;
     this.currentTab = tab;
     this.pageNumber = 1;
+    this.paginator.pageIndex = 0;
     this.totalCount = 0;
 
     this.getDelegates(
@@ -309,5 +313,11 @@ export class ListComponent implements OnInit, OnDestroy {
       );
       }
     })
+  }
+
+  changePage(event: any): void {
+    this.pageNumber = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.getDelegates(this.pageNumber, this.pageSize, this.searchFormControl, this.currentTab, false);
   }
 }

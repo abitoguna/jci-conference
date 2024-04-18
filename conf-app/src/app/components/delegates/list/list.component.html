@@ -110,10 +110,12 @@
         </div>
         <div class="card-footer">
           <mat-paginator
+            #paginator
             [length]="totalCount"
             [pageSize]="pageSize"
             [pageSizeOptions]="[10, 25, 50, 100]"
             aria-label="Select page"
+            (page)="changePage($event)"
           >
           </mat-paginator>
         </div>
@@ -167,10 +169,12 @@
         </div>
         <div class="card-footer">
           <mat-paginator
+            #paginator
             [length]="totalCount"
             [pageSize]="pageSize"
             [pageSizeOptions]="[10, 25, 50, 100]"
             aria-label="Select page"
+            (page)="changePage($event)"
           >
           </mat-paginator>
         </div>
@@ -224,10 +228,12 @@
         </div>
         <div class="card-footer">
           <mat-paginator
+            #paginator
             [length]="totalCount"
             [pageSize]="pageSize"
             [pageSizeOptions]="[10, 25, 50, 100]"
             aria-label="Select page"
+            (page)="changePage($event)"
           >
           </mat-paginator>
         </div>
@@ -267,7 +273,14 @@
       </div>
       <ng-container *ngIf="!isLoading">
         <tr *ngFor="let item of allDelegates">
-          <td>{{ item.firstName | titlecase }}</td>
+          <td>
+            <span
+              class="online"
+              title="Delegate registered online and is priority for kit."
+              *ngIf="item.isOnlineRegistration"
+            ></span>
+            {{ item.firstName | titlecase }}
+          </td>
           <td>{{ item.lastName | titlecase }}</td>
           <td>{{ item.membershipType }}</td>
           <td>{{ item.email }}</td>
@@ -316,10 +329,18 @@
             </button>
           </td>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-              <span>View</span>
+            <button
+              mat-menu-item
+              *ngIf="!item.isRegistered"
+              (click)="registerOnly(item)"
+            >
+              <span>Register Only</span>
             </button>
-            <button mat-menu-item (click)="openDelegateForm(item)" *ngIf="isAdmin">
+            <button
+              mat-menu-item
+              (click)="openDelegateForm(item)"
+              *ngIf="isAdmin"
+            >
               <span>Edit</span>
             </button>
             <button

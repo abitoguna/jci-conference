@@ -2,3 +2,11 @@
     display: flex;
     text-align: center;
 }
+
+.online {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4fbe05;
+}
