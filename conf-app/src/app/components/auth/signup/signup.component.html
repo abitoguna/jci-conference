@@ -77,14 +77,24 @@
           [disabled]="isLoading"
         />
       </div>
-      <button
-        class="btn btn-primary rounded-pill px-5 d-block mx-auto py-2 text-light"
-        type="submit"
-        [disabled]="formGroup.invalid || isLoading"
-      >
-        <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
-        {{ isLoading ? "" : "Add User" }}
-      </button>
+      <div class="d-flex align-items-center justify-content-center py-2">
+        <button
+          class="btn btn-primary rounded-pill px-3 text-light"
+          type="submit"
+          [disabled]="formGroup.invalid || isLoading"
+        >
+          <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
+          {{ isLoading ? "" : "Add User" }}
+        </button>
+        <button
+          class="btn btn-outline-dark rounded-pill px-3"
+          type="reset"
+          (click)="closeModal()"
+          [disabled]="isLoading"
+        >
+          Close
+        </button>
+      </div>
     </form>
   </div>
 </mat-dialog-content>

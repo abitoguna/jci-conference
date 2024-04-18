@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
@@ -26,9 +26,10 @@ export class ConfigComponent implements OnInit, OnDestroy {
   isLoading = false;
   unsubscriber$ = new Subject<void>();
   formGroup = new FormGroup({
-    mealType: new FormControl(''),
+    id: new FormControl(0, [Validators.required]),
+    mealType: new FormControl<string | null>(null),
     banquetMode: new FormControl(false),
-    isServingMeal: new FormControl(false)
+    isServingMeal: new FormControl<boolean>(false)
   })
   constructor(
     private listService: ListService,
@@ -49,6 +50,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
         next: (res) => {
           this.isLoading = false;
           this.config = res.data;
+          this.formGroup.patchValue(this.config);
         },
         error: (err) => {
           this.isLoading = false;
@@ -71,6 +73,25 @@ export class ConfigComponent implements OnInit, OnDestroy {
   }
 
   update(): void {
-    const data = this.formGroup.value;;
+    const data = this.formGroup.value;
+    this.isLoading = true;
+    this.listService.updateConfig(data).pipe(takeUntil(this.unsubscriber$)).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.openSnackBar('Config updated');
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.openSnackBar(err.error.message);
+    }
+  })
+  }
+
+  isMealServed(): boolean {
+    return this.formGroup.get('isServingMeal')!.value ?? false;
+  }
+
+  closeModal(): void {
+    this.dialogRef.close();
   }
 }

@@ -3,14 +3,14 @@ const connection = require("../connection");
 const router = express.Router();
 const user = require('../routes/user');
 
-router.post('/update/:id', user.verifyToken, async (req, res) => {
+router.put('/update', user.verifyToken, async (req, res) => {
     let client;
     const {
+        id,
         isServingMeal,
         mealType,
         banquetMode
     } = req.body;
-    const id = req.params.id
     try {
         const query = `UPDATE config SET is_serving_meal = $2, meal_type = $3, banquet_mode = $4 WHERE id = $1`;
         client = await connection.connect();

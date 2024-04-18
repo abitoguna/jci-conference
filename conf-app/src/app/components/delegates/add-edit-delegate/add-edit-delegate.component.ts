@@ -101,4 +101,9 @@ export class AddEditDelegateComponent {
       duration: 4000,
     });
   }
+
+
+  closeModal(): void {
+    this.dialogRef.close();
+  }
 }

@@ -1,8 +1,62 @@
 <mat-dialog-content>
-    <p class="h5 text-center mb-3">Configuration</p>
-    <form 
-    [formGroup]="formGroup"
-    (ngSubmit)="update()">
+  <p class="h5 text-center mb-3">Configuration</p>
+  <form [formGroup]="formGroup" (ngSubmit)="update()">
+    <div class="form-group mb-3">
+      <label>Is serving meal</label>
+      <select
+        class="form-select"
+        aria-label="Default select"
+        formControlName="isServingMeal"
+        [disabled]="isLoading"
+      >
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+    <div class="form-group mb-3" *ngIf="isMealServed()">
+      <label>Meal Type</label>
+      <select
+        class="form-select"
+        aria-label="Default select"
+        formControlName="mealType"
+        [disabled]="isLoading"
+      >
+        <option value="null">-Select meal type-</option>
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+      </select>
+    </div>
+    <div class="form-group mb-3">
+      <label>Is Banquet mode</label>
+      <select
+        class="form-select"
+        aria-label="Default select"
+        formControlName="banquetMode"
+        [disabled]="isLoading"
+      >
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
 
-    </form>
+    <div class="d-flex py-2 justify-content-center align-items-center">
+      <button
+        class="btn btn-primary rounded-pill px-3"
+        type="submit"
+        [disabled]="formGroup.invalid || isLoading"
+      >
+        <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
+        {{ isLoading ? "" : "Update Config" }}
+      </button>
+      <button
+        class="btn btn-outline-dark rounded-pill px-3 ms-2"
+        type="reset"
+        (click)="closeModal()"
+        [disabled]="isLoading"
+      >
+        Close
+      </button>
+    </div>
+  </form>
 </mat-dialog-content>

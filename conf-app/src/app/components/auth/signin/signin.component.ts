@@ -57,4 +57,9 @@ export class SigninComponent implements OnDestroy {
       this.unsubscriber$.next();
       this.unsubscriber$.complete();
   }
+
+
+  closeModal(): void {
+    this.dialogRef.close();
+  }
 }

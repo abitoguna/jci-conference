@@ -27,8 +27,22 @@
         </div>
         <p class="h3 mt-4 mb-2 text-center">DELEGATE E-TAG</p>
         <div class="button-area d-flex flex-column mt-4 mb-2">
-          <button class="btn btn-info rounded-pill mb-3" [disabled]="isLoading">View Brochure</button>
-          <button class="btn btn-info rounded-pill mb-3" [disabled]="isLoading">View Program</button>
+          <div class="delegate" *ngIf="!isLoggedIn">
+            <a class="btn btn-info rounded-pill mb-3" href="https://bit.ly/IsongEwongoBrochure" target="_blank">View Brochure</a>
+            <a class="btn btn-info rounded-pill mb-3" href="htttps://bit.ly/IsongEwongoProgram" target="_blank">View Program</a>
+          </div>
+          <div class="actions" *ngIf="isLoggedIn">
+            <div class="data" *ngIf="!isGettingMeal">
+              <p class="h6 d-flex align-items-center justify-content-center" *ngIf="isMealServed"><span class="display-4">🍛</span> {{ config.mealType | titlecase }} is served.</p>
+            <button *ngIf="!isMealServed" class="btn btn-success rounded-pill mb-3 w-100" (click)="markMealDone()">Mark {{ config.mealType | titlecase }} collected</button>
+            </div>
+            <div class="loader">
+              <app-loader *ngIf="isGettingMeal"
+                [diameter]="20"
+                text="Getting meal..."
+                ></app-loader>
+            </div>
+          </div>
         </div>
         <div class="details-area text-center py-3">
           <p class="h6">Name</p>

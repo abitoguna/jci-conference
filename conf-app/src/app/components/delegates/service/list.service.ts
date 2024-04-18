@@ -37,5 +37,17 @@ export class ListService {
   getConfig(): Observable<any> {
     return this.apiService.get<any>('config/get');
   }
+
+  updateConfig(data: any): Observable<any> {
+    return this.apiService.put('config/update', data);
+  }
+
+  createMeal(date: any, id: any): Observable<any> {
+    return this.apiService.post(`meal/create/${id}`, {date});
+  }
+
+  getDelegateMeal(id: any, date: any): Observable<any> {
+    return this.apiService.get(`meal/get/${id}`, {date});
+  }
   
 }

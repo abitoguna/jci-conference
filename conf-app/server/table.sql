@@ -41,22 +41,3 @@ CREATE TABLE config (
     meal_type varchar(255),
     banquet_mode BOOLEAN
 )
-
-insert into User(username, email, password) values('abitoguna', 'abitoguna@gmail.com', 'admin');
-
-{
-    "firstName": "Akinbode",
-    "lastName": "Abitogun",
-    "email": "abitoguna@gmail.com",
-    "phoneNumber": "08138354602",
-    "membershipType": "JCIN Amb.",
-    "gender": "male",
-    "localOrganisation": "JCI Oluyole"
-}
-
-{
-    "username": "abitoguna",
-    "email": "abitoguna@gmail.com",
-    "team": "registration",
-    "password": "Admin123"
-}

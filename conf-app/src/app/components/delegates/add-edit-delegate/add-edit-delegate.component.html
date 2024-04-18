@@ -119,13 +119,23 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button
-      class="btn btn-primary rounded-pill px-5 d-block mx-auto py-2 text-light"
+    <div class="d-flex align-items-center justify-content-between py-2">
+      <button
+      class="btn btn-primary rounded-pill px-5 text-light"
       type="submit"
       [disabled]="formGroup.invalid || isLoading"
     >
       <app-loader *ngIf="isLoading" text="Processing..."></app-loader>
       {{ isLoading ? "" : "Submit" }}
     </button>
+    <button
+        class="btn btn-outline-dark rounded-pill px-3 ms-2"
+        type="reset"
+        (click)="closeModal()"
+        [disabled]="isLoading"
+      >
+        Close
+      </button>
+    </div>
   </mat-dialog-actions>
 </form>

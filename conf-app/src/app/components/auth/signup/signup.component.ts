@@ -86,4 +86,8 @@ export class SignupComponent implements OnInit {
   isAdminSelected(): boolean {
     return Boolean(this.formGroup.get('isAdmin')?.value === true);
   }
+
+  closeModal(): void {
+    this.dialogRef.close();
+  }
 }
