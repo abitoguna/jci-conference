@@ -58,11 +58,10 @@
         <label>Team</label>
         <select
           class="form-select"
-          aria-label="Default select"
           formControlName="team"
           [disabled]="isLoading"
         >
-          <option value="">-Select user team-</option>
+          <option value="null">-Select user team-</option>
           <option value="registration">Registration</option>
           <option value="welfare">Welfare</option>
         </select>

@@ -34,7 +34,7 @@ export class SignupComponent implements OnInit {
     password: new FormControl(null, [Validators.required]),
     email: new FormControl(null, [Validators.required]),
     pin: new FormControl(null, [Validators.required]),
-    team: new FormControl<string>('', [Validators.required]),
+    team: new FormControl('registration'),
     isAdmin: new FormControl(false),
   });
   constructor(
@@ -44,12 +44,12 @@ export class SignupComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.formGroup.valueChanges.pipe(takeUntil(this.unsubscriber$)).subscribe({
+    this.formGroup.get('isAdmin')?.valueChanges.pipe(takeUntil(this.unsubscriber$)).subscribe({
       next: (res) => {
-        if (res.isAdmin) {
+        if (res) {
           this.formGroup.get('team')?.patchValue('admin');
         } else {
-          this.formGroup.get('team')?.patchValue('');
+          this.formGroup.get('team')?.patchValue('registration');
         }
       },
     });
