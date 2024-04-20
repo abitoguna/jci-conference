@@ -15,5 +15,6 @@ export interface Delegate {
     isLateRegistration: boolean;
     isOnlineRegistration: boolean;
     registeredBy: string;
+    isBanquet: boolean;
     meals: Meal[]
 }

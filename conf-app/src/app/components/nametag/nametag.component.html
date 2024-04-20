@@ -28,39 +28,83 @@
         <p class="h3 mt-4 mb-2 text-center">DELEGATE E-TAG</p>
         <div class="button-area d-flex flex-column mt-4 mb-2">
           <div class="delegate" *ngIf="!isLoggedIn">
-            <a class="btn btn-info rounded-pill mb-3" href="https://bit.ly/IsongEwongoBrochure" target="_blank">View Brochure</a>
-            <a class="btn btn-info rounded-pill mb-3 ms-3" href="https://bit.ly/IsongEwongoProgram" target="_blank">View Program</a>
+            <a
+              class="btn btn-info rounded-pill mb-3"
+              href="https://bit.ly/IsongEwongoBrochure"
+              target="_blank"
+              >View Brochure</a
+            >
+            <a
+              class="btn btn-info rounded-pill mb-3 ms-3"
+              href="https://bit.ly/IsongEwongoProgram"
+              target="_blank"
+              >View Program</a
+            >
+          </div>
+          <div class="banquet" *ngIf="isLoggedIn && config?.banquetMode">
+            <div class="data" *ngIf="!isSettingBanquet">
+              <button
+                class="btn rounded-pill mb-3 w-100"
+                [ngClass]="isBanquetAttended ? 'btn-danger' : 'btn-info'"
+                (click)="toggleBanquet()"
+              >
+                {{ isBanquetAttended ? "Exit" : "Enter" }} Banquet Hall
+              </button>
+            </div>
+            <div class="loader">
+              <app-loader
+                *ngIf="isSettingBanquet"
+                [diameter]="20"
+                [text]="isBanquetAttended ? 'Exiting the hall': 'Entering the hall'"
+              ></app-loader>
+            </div>
           </div>
           <div class="actions" *ngIf="isLoggedIn && config.isServingMeal">
             <div class="data" *ngIf="!isGettingMeal">
-              <p class="h6 d-flex align-items-center justify-content-center" *ngIf="isMealServed"><span class="display-4">🍛</span> {{ config.mealType | titlecase }} is served.</p>
-            <button *ngIf="!isMealServed" class="btn btn-success rounded-pill mb-3 w-100" (click)="markMealDone()">Mark {{ config.mealType | titlecase }} collected</button>
+              <p
+                class="h6 d-flex align-items-center justify-content-center"
+                *ngIf="isMealServed"
+              >
+                <span class="display-4">🍛</span>
+                {{ config.mealType | titlecase }} is served.
+              </p>
+              <button
+                *ngIf="!isMealServed"
+                class="btn btn-success rounded-pill mb-3 w-100"
+                (click)="markMealDone()"
+              >
+                Mark {{ config.mealType | titlecase }} collected
+              </button>
             </div>
             <div class="loader">
-              <app-loader *ngIf="isGettingMeal"
+              <app-loader
+                *ngIf="isGettingMeal"
                 [diameter]="20"
                 text="Getting meal..."
-                ></app-loader>
+              ></app-loader>
             </div>
           </div>
         </div>
         <div class="details-area text-center py-3">
           <p class="h6">Name</p>
           <p class="h5 p-1 border border-dark rounded">
-            <app-loader *ngIf="isLoading"
-                [diameter]="20"
-                text="Loading name..."
-                ></app-loader>
+            <app-loader
+              *ngIf="isLoading"
+              [diameter]="20"
+              text="Loading name..."
+            ></app-loader>
             <span>{{ title }} </span>{{ name }}
           </p>
           <br />
           <p class="h6">Local Organisation</p>
           <p class="h5 mb-3 p-1 border border-dark rounded">
             <span *ngIf="!isLoading">{{ localOrganisation }}</span>
-            <app-loader *ngIf="isLoading"
-            [diameter]="20"
-            text="Loading local organisation..."
-            ></app-loader></p>
+            <app-loader
+              *ngIf="isLoading"
+              [diameter]="20"
+              text="Loading local organisation..."
+            ></app-loader>
+          </p>
         </div>
         <div class="info-area bg-info p-2 rounded fw-bolder">
           <div class="d-flex align-items-center justify-content-center">
@@ -76,7 +120,9 @@
           <div class="rounded fw-bold theme mx-auto bg-white mt-1">
             <div class="d-flex">
               <div class="title p-1">Theme:</div>
-              <p class="m-0 p-1">Sustainable growth in challenging times: A Nigerian Perspective</p>
+              <p class="m-0 p-1">
+                Sustainable growth in challenging times: A Nigerian Perspective
+              </p>
             </div>
           </div>
         </div>

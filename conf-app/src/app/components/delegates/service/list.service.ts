@@ -50,4 +50,7 @@ export class ListService {
     return this.apiService.get(`meal/get/${id}`, {date});
   }
   
+  toggleDelegate(data: any): Observable<any> {
+    return this.apiService.put(`delegate/toogle-banquet/${data.id}`, {data});
+  }
 }

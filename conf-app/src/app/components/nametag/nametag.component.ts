@@ -38,6 +38,8 @@ export class NametagComponent implements OnDestroy {
   todayDate = moment().format('YYYY-MM-DD');
   isMealServed = false;
   unsubscriber$ = new Subject<void>();
+  isSettingBanquet = false;
+  isBanquetAttended = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private listService: ListService,
@@ -59,6 +61,7 @@ export class NametagComponent implements OnDestroy {
             this.title = delegate.membershipType ?? null;
             this.name = `${delegate.firstName} ${delegate.lastName}`;
             this.localOrganisation = delegate.localOrganisation;
+            this.isBanquetAttended = delegate.isBanquet;
             this.isLoading = false;
           });
       }
@@ -140,5 +143,26 @@ export class NametagComponent implements OnDestroy {
           this.openSnackBar(err.error.message);
         },
       });
+  }
+
+  toggleBanquet(): void {
+    this.isSettingBanquet = true;
+    const banquetAttendance = !this.isBanquetAttended;
+    const data = {
+      id: this.id,
+      attendance: banquetAttendance
+    }
+
+    this.listService.toggleDelegate(data).pipe(take(1)).subscribe({
+      next: (res: any) => {
+        this.isSettingBanquet = false;
+        this.isBanquetAttended = banquetAttendance;
+        this.openSnackBar(res.message);
+      },
+      error: (err: any) => {
+        this.isSettingBanquet = false;
+        this.openSnackBar(err.error.message);
+      }
+    });
   }
 }

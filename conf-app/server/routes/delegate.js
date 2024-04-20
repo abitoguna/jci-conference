@@ -336,7 +336,7 @@ router.get('/getNameTag/:id', async (req, res) => {
         }
 
         client = await connection.connect();
-        const delegateResult = await client.query('SELECT id AS id, firstname AS first_name, lastname AS last_name, membershiptype AS membership_type, localorganisation AS local_organisation FROM delegates WHERE id = $1', [delegateId]);
+        const delegateResult = await client.query('SELECT id AS id, firstname AS first_name, lastname AS last_name, membershiptype AS membership_type, localorganisation AS local_organisation, is_banquet FROM delegates WHERE id = $1', [delegateId]);
         const rows = delegateResult.rows;
         const camelCaseRows = rows.map((row) => {
             const camelCaseRow = {};
@@ -359,6 +359,32 @@ router.get('/getNameTag/:id', async (req, res) => {
         await client.release();
     }
 });
+
+router.put("/toogle-banquet/:id", user.verifyToken, async (req, res) => {
+    let client;
+    try {
+        const delegateId = req.params.id;
+        const banquetAttendance = req.body.data.attendance ?? false;
+
+
+
+        if (!delegateId) {
+            return res
+                .status(400)
+                .send({ message: "Delegate cannot be empty." });
+        }
+
+        client = await connection.connect();
+
+        await client.query("UPDATE delegates SET is_banquet = $1 WHERE id = $2", [banquetAttendance, delegateId]);
+        const message = banquetAttendance ? 'Delegate has entered the banquet hall' : 'Banquet exited the banquet hall';
+            return res.status(200).json({ message });
+    } catch (err) {
+        return res.status(500).send({ message: `` });
+    } finally {
+        await client.release();
+    }
+})
 
 async function generateQRCode(text) {
     try {
