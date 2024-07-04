@@ -15,6 +15,7 @@ import {
   ionPersonAddOutline,
   ionEllipsisVerticalCircleOutline,
   ionShirtSharp,
+  ionDownload
 } from '@ng-icons/ionicons';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -23,6 +24,7 @@ import { ProcessingComponent } from '../../dialog/processing/processing.componen
 import { NavComponent } from '../../nav/nav.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { AddEditDelegateComponent } from '../add-edit-delegate/add-edit-delegate.component';
+import QRCode  from 'qrcode';
 
 @Component({
   selector: 'app-list',
@@ -52,6 +54,7 @@ import { AddEditDelegateComponent } from '../add-edit-delegate/add-edit-delegate
       ionPersonAddOutline,
       ionEllipsisVerticalCircleOutline,
       ionShirtSharp,
+      ionDownload
     }),
   ],
 })
@@ -319,5 +322,31 @@ export class ListComponent implements OnInit, OnDestroy {
     this.pageNumber = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     this.getDelegates(this.pageNumber, this.pageSize, this.searchFormControl, this.currentTab, false);
+  }
+
+  async downloadQrCode(delegate: Delegate) {
+    const qrCodeText = `https://jciconf.netlify.app/#/scantag/${delegate.id}`;
+    const qrCodeData = await this.createQrCode(qrCodeText);
+    const qrCode = {
+      name: `${delegate.firstName}-${delegate.lastName}-etag.png`,
+      content: qrCodeData.replace(/^data:image\/\w+;base64,/, '')
+  };
+    this.downloadFileFromDataUrl(qrCode.name, qrCodeData);
+  }
+
+  async createQrCode(text: string): Promise<string> {
+    const qrData = await QRCode.toDataURL(text, { errorCorrectionLevel: 'H' });
+    return qrData;
+  }
+
+  downloadFileFromDataUrl(fileName: string, dataUrl: string): void {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = fileName;
+    link.type = dataUrl.split(',')[0].split(':')[1];
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

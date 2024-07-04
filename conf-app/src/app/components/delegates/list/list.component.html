@@ -1,10 +1,10 @@
 <section class="top">
   <app-nav />
 </section>
-<section class="container">
+<section class="container-fluid">
   <div class="text-center">
     <img
-      src="assets/images/southern-conf-logo.jpg"
+      src="assets/images/collegiate-conf-logo.jpg"
       alt=""
       class="img-fluid mb-3 w-25"
     />
@@ -308,6 +308,13 @@
             {{ item?.registeredBy | titlecase }}
           </td>
           <td>
+            <button
+              class="btn btn-success btn-sm rounded-pill me-2"
+              title="Download qr code"
+              (click)="downloadQrCode(item)"
+            >
+              <ng-icon name="ionDownload" size="1.3em" />
+            </button>
             <button
               class="btn btn-outline-success btn-sm rounded-pill me-2"
               title="Register and confirm kit"
