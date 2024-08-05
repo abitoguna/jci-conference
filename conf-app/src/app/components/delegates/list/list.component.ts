@@ -153,7 +153,7 @@ export class ListComponent implements OnInit, OnDestroy {
     let message = '';
     if (!delegate.isRegistered) {
       message = `This will register ${name} only and will not confirm ${
-        delegate.gender === 'male' ? 'his' : 'her'
+        delegate.gender.toLocaleLowerCase() === 'male' ? 'his' : 'her'
       } kit collection.`;
     } else if (delegate.isRegistered && delegate.kitCollected) {
       message = `This will register cancel kit collection for ${name}.`;
@@ -168,7 +168,7 @@ export class ListComponent implements OnInit, OnDestroy {
   confirmKitOnly(delegate: Delegate): void {
     const name = `${delegate.firstName} ${delegate.lastName}`;
     const message = `This will confirm ${name} has collected ${
-      delegate.gender === 'male' ? 'his' : 'her'
+      delegate.gender.toLocaleLowerCase() === 'male' ? 'his' : 'her'
     } kit.`;
     const data = {
       isKitCollected: true,
@@ -188,7 +188,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
     const name = `${delegate.firstName} ${delegate.lastName}`;
     const message = `This will register ${name} and confirm ${
-      delegate.gender === 'male' ? 'his' : 'her'
+      delegate.gender.toLocaleLowerCase() === 'male' ? 'his' : 'her'
     } kit collection.`;
     const data = {
       isKitCollected: true,

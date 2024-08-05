@@ -65,6 +65,7 @@ export class AddEditDelegateComponent {
   }
 
   initEditForm(delegate: Delegate): void {
+    delegate.gender = delegate.gender.toLocaleLowerCase();
     this.formGroup.patchValue(delegate);
   }
 

@@ -145,7 +145,7 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
             const delegateResult = await client.query(query, [
                 isRegistered,
                 pageSize,
-                offset,
+                offset
             ]);
             const rows = delegateResult.rows;
             const camelCaseRows = rows.map((row) => {
@@ -167,9 +167,18 @@ router.get("/getAll", user.verifyToken, async (req, res) => {
                     pageSize,
                     totalCount: parseInt(delegateResult.rows[0]?.total_count ?? 0),
                 });
+
+
+            // trigger email
+            // const emailLimit = 9;
+            // const timeBetweenEmails = (60 * 1000) / emailLimit
+            // for (const data of camelCaseRows) {
+            //     await sendEmail(data);
+            //     count++;
+            //     await new Promise(resolve => setTimeout(resolve, timeBetweenEmails)); // Wait before next email
+            //   }
         }
     } catch (err) {
-        console.log(err);
         res.status(500).send({ message: "Error fetching delegates" });
     } finally {
         await client.release();
@@ -378,7 +387,7 @@ router.put("/toogle-banquet/:id", user.verifyToken, async (req, res) => {
 
         await client.query("UPDATE delegates SET is_banquet = $1 WHERE id = $2", [banquetAttendance, delegateId]);
         const message = banquetAttendance ? 'Delegate has entered the banquet hall' : 'Banquet exited the banquet hall';
-            return res.status(200).json({ message });
+        return res.status(200).json({ message });
     } catch (err) {
         return res.status(500).send({ message: `` });
     } finally {
@@ -396,4 +405,20 @@ async function generateQRCode(text) {
     }
 }
 
+async function sendEmail(data) {
+    const qrCodeText = `https://jciconf.netlify.app/#/scantag/${data.id}`;
+    const qrCodeData = await generateQRCode(qrCodeText);
+    const qrCode = {
+        name: `${data.firstName}-${data.lastName}-etag.png`,
+        content: qrCodeData.replace(/^data:image\/\w+;base64,/, '')
+    };
+    sendEmailNotification(
+        data.firstName,
+        data.lastName,
+        data.email,
+        qrCode,
+        qrCodeText
+    );
+    await new Promise(resolve => setTimeout(resolve, 1000));
+}
 module.exports = router;

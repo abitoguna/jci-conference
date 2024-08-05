@@ -8,14 +8,14 @@
   .cards {
     .card {
         cursor: pointer;
-    //     &.disabled {
-    //         cursor: not-allowed;
-    //     }
-    //   filter: grayscale(100%);
-    //   transition: filter 0.5s ease-in-out;
-    //   &:hover {
-    //     filter: grayscale(0%);
-    //   }
+        &.disabled {
+            cursor: not-allowed;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease-in-out;
+        }
+      &:hover {
+        filter: grayscale(0%);
+      }
     }
   }
 }

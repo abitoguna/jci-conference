@@ -7,5 +7,5 @@ import { AuthGuard } from './guard/auth.guard';
 export const routes: Routes = [
   { path: '', component: WelcomeComponent },
   { path: 'scantag/:id', component: NametagComponent },
-  { path: 'collegiate-conf/delegates', component: ListComponent, canActivate: [AuthGuard] }
+  { path: 'northern-conf/delegates', component: ListComponent, canActivate: [AuthGuard] }
 ];
